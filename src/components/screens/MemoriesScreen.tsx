@@ -3,174 +3,165 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-
-interface Memory {
-  id: number;
-  image: string;
-  caption: string;
-  date?: string;
-}
-
-// Placeholder memories - Josef will add real photos
-const memories: Memory[] = [
-  {
-    id: 1,
-    image: "/images/photos/placeholder-1.jpg",
-    caption: "Our first adventure together 💕",
-    date: "2024",
-  },
-  {
-    id: 2,
-    image: "/images/photos/placeholder-2.jpg",
-    caption: "Snack Queen in her natural habitat 👑🍕",
-    date: "2024",
-  },
-  {
-    id: 3,
-    image: "/images/photos/placeholder-3.jpg",
-    caption: "My Labubu being adorable as always 🥰",
-    date: "2024",
-  },
-  {
-    id: 4,
-    image: "/images/photos/placeholder-4.jpg",
-    caption: "This is DEFINITELY her favorite food (again) 😂",
-    date: "2024",
-  },
-  {
-    id: 5,
-    image: "/images/photos/placeholder-5.jpg",
-    caption: "Baby Dragon and her Jo-Yo 🐉❤️",
-    date: "2024",
-  },
-];
+import { memories } from "@/lib/memories";
+import { getAssetPath } from "@/lib/utils";
 
 export function MemoriesScreen() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [hasPhotos] = useState(false); // Set to true when photos are added
-
-  const goNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % memories.length);
-  };
-
-  const goPrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + memories.length) % memories.length);
-  };
-
-  if (!hasPhotos) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center bg-white/90 backdrop-blur rounded-3xl p-12 shadow-2xl max-w-lg"
-        >
-          <span className="text-8xl block mb-6">📸</span>
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            Our Memories Together
-          </h1>
-          <p className="text-gray-600 mb-6">
-            This section will be filled with our beautiful moments together, Nan
-            Nan! 💕
-          </p>
-          <div className="flex flex-wrap justify-center gap-2 text-4xl">
-            {["❤️", "🥰", "💕", "📷", "🌹", "💖"].map((emoji, i) => (
-              <motion.span
-                key={i}
-                animate={{ y: [0, -5, 0] }}
-                transition={{ repeat: Infinity, duration: 1, delay: i * 0.1 }}
-              >
-                {emoji}
-              </motion.span>
-            ))}
-          </div>
-          <p className="text-sm text-gray-400 mt-6">Photos coming soon... 🌸</p>
-        </motion.div>
-      </div>
-    );
-  }
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen p-4 md:p-8">
       {/* Header */}
-      <motion.h1
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-3xl md:text-4xl font-bold text-white text-center mb-8 drop-shadow-lg"
+        className="text-center mb-8"
       >
-        📸 Our Moments Together 📸
-      </motion.h1>
+        <h1 className="text-3xl md:text-5xl font-bold text-white drop-shadow-lg mb-2">
+          🖼️ Our Memory Museum 🖼️
+        </h1>
+        <p className="text-white/80 text-lg">
+          A gallery of our beautiful moments together
+        </p>
+      </motion.div>
 
-      {/* Photo Gallery */}
-      <div className="max-w-3xl mx-auto">
-        <AnimatePresence mode="wait">
+      {/* Gallery Grid */}
+      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+        {memories.map((memory, index) => (
           <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0, scale: 0.9 }}
+            key={memory.id}
+            initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.3 }}
-            className="bg-white rounded-3xl p-6 shadow-2xl"
+            transition={{ delay: index * 0.05 }}
+            whileHover={{ scale: 1.05, rotate: Math.random() > 0.5 ? 2 : -2 }}
+            onClick={() => setSelectedImage(memory.id)}
+            className="cursor-pointer"
           >
-            {/* Polaroid Style Frame */}
-            <div className="bg-white p-4 rounded-xl shadow-inner">
-              <div className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 mb-4">
+            {/* Painting Frame */}
+            <div className="relative bg-gradient-to-br from-amber-800 via-amber-700 to-amber-900 p-3 md:p-4 rounded-sm shadow-2xl">
+              {/* Inner gold border */}
+              <div className="absolute inset-2 md:inset-3 border-2 border-amber-500/50 pointer-events-none" />
+
+              {/* Ornate corners */}
+              <div className="absolute top-1 left-1 w-4 h-4 border-t-2 border-l-2 border-amber-400/70" />
+              <div className="absolute top-1 right-1 w-4 h-4 border-t-2 border-r-2 border-amber-400/70" />
+              <div className="absolute bottom-1 left-1 w-4 h-4 border-b-2 border-l-2 border-amber-400/70" />
+              <div className="absolute bottom-1 right-1 w-4 h-4 border-b-2 border-r-2 border-amber-400/70" />
+
+              {/* Image container */}
+              <div className="relative aspect-square overflow-hidden bg-stone-900">
                 <Image
-                  src={memories[currentIndex].image}
-                  alt={memories[currentIndex].caption}
+                  src={getAssetPath(memory.image)}
+                  alt={`Memory from ${memory.date}`}
                   fill
                   className="object-cover"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 />
               </div>
 
-              {/* Caption */}
-              <p className="text-center text-gray-800 font-medium text-lg">
-                {memories[currentIndex].caption}
-              </p>
-              {memories[currentIndex].date && (
-                <p className="text-center text-gray-400 text-sm mt-1">
-                  {memories[currentIndex].date}
+              {/* Date plaque */}
+              <div className="mt-2 bg-gradient-to-r from-amber-900 via-amber-800 to-amber-900 py-1 px-2 rounded-sm">
+                <p className="text-amber-200/90 text-xs md:text-sm text-center font-serif italic">
+                  {memory.date}
                 </p>
-              )}
-            </div>
-
-            {/* Navigation */}
-            <div className="flex justify-between items-center mt-6">
-              <button
-                onClick={goPrev}
-                className="px-6 py-3 bg-rose-100 text-rose-600 rounded-full font-medium hover:bg-rose-200 transition-colors"
-              >
-                ← Previous
-              </button>
-
-              {/* Dots */}
-              <div className="flex gap-2">
-                {memories.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentIndex(i)}
-                    className={`w-3 h-3 rounded-full transition-all ${
-                      i === currentIndex ? "bg-rose-500 w-6" : "bg-rose-200"
-                    }`}
-                  />
-                ))}
               </div>
-
-              <button
-                onClick={goNext}
-                className="px-6 py-3 bg-rose-500 text-white rounded-full font-medium hover:bg-rose-600 transition-colors"
-              >
-                Next →
-              </button>
             </div>
           </motion.div>
-        </AnimatePresence>
-
-        {/* Photo counter */}
-        <p className="text-center text-white/80 mt-4">
-          {currentIndex + 1} / {memories.length}
-        </p>
+        ))}
       </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedImage(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              className="relative max-w-4xl w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Large painting frame */}
+              <div className="bg-gradient-to-br from-amber-800 via-amber-700 to-amber-900 p-6 md:p-8 rounded-sm shadow-2xl">
+                {/* Inner gold border */}
+                <div className="absolute inset-4 md:inset-6 border-4 border-amber-500/50 pointer-events-none" />
+
+                {/* Ornate corners */}
+                <div className="absolute top-2 left-2 w-8 h-8 border-t-4 border-l-4 border-amber-400/70" />
+                <div className="absolute top-2 right-2 w-8 h-8 border-t-4 border-r-4 border-amber-400/70" />
+                <div className="absolute bottom-2 left-2 w-8 h-8 border-b-4 border-l-4 border-amber-400/70" />
+                <div className="absolute bottom-2 right-2 w-8 h-8 border-b-4 border-r-4 border-amber-400/70" />
+
+                {/* Image */}
+                <div className="relative aspect-[4/3] overflow-hidden bg-stone-900">
+                  <Image
+                    src={getAssetPath(
+                      memories.find((m) => m.id === selectedImage)?.image || "",
+                    )}
+                    alt="Memory"
+                    fill
+                    className="object-contain"
+                    sizes="100vw"
+                  />
+                </div>
+
+                {/* Date plaque */}
+                <div className="mt-4 bg-gradient-to-r from-amber-900 via-amber-800 to-amber-900 py-2 px-4 rounded-sm">
+                  <p className="text-amber-200 text-lg md:text-xl text-center font-serif italic">
+                    {memories.find((m) => m.id === selectedImage)?.date}
+                  </p>
+                </div>
+              </div>
+
+              {/* Close button */}
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-4 -right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-800 shadow-lg hover:bg-gray-100 transition-colors"
+              >
+                ✕
+              </button>
+
+              {/* Navigation */}
+              <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between px-2 pointer-events-none">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const currentIndex = memories.findIndex(
+                      (m) => m.id === selectedImage,
+                    );
+                    if (currentIndex > 0) {
+                      setSelectedImage(memories[currentIndex - 1].id);
+                    }
+                  }}
+                  className="pointer-events-auto w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white text-2xl transition-colors"
+                >
+                  ←
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const currentIndex = memories.findIndex(
+                      (m) => m.id === selectedImage,
+                    );
+                    if (currentIndex < memories.length - 1) {
+                      setSelectedImage(memories[currentIndex + 1].id);
+                    }
+                  }}
+                  className="pointer-events-auto w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white text-2xl transition-colors"
+                >
+                  →
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
