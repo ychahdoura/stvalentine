@@ -15,9 +15,32 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
   const [isShaking, setIsShaking] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [hasStartedChasing, setHasStartedChasing] = useState(false);
+  const [audioUnlocked, setAudioUnlocked] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Unlock audio on first user interaction anywhere on page
+  useEffect(() => {
+    const unlockAudio = () => {
+      if (audioRef.current && !audioUnlocked) {
+        // Load the audio to unlock it
+        audioRef.current.load();
+        setAudioUnlocked(true);
+      }
+    };
+
+    // Listen for any interaction to unlock audio
+    document.addEventListener("click", unlockAudio, { once: true });
+    document.addEventListener("touchstart", unlockAudio, { once: true });
+    document.addEventListener("mousemove", unlockAudio, { once: true });
+
+    return () => {
+      document.removeEventListener("click", unlockAudio);
+      document.removeEventListener("touchstart", unlockAudio);
+      document.removeEventListener("mousemove", unlockAudio);
+    };
+  }, [audioUnlocked]);
 
   // Track mouse position and make button run away
   useEffect(() => {
@@ -78,11 +101,15 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
 
   // Start chasing on first hover and play audio
   const startChasing = useCallback(() => {
-    // Try to play audio on hover (user gesture)
+    // Play audio on hover - should work after audio is unlocked
     if (audioRef.current) {
-      audioRef.current.play().catch(() => {
-        // Ignore autoplay errors
-      });
+      audioRef.current.volume = 0.7;
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // If autoplay fails, it will play on next click
+        });
+      }
     }
 
     if (!hasStartedChasing) {
@@ -196,6 +223,8 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
           animate={{ x: noButtonPosition.x, y: noButtonPosition.y }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
           onMouseEnter={startChasing}
+          onPointerEnter={startChasing}
+          onMouseOver={startChasing}
           onClick={handleNoButtonInteraction}
           onTouchStart={handleNoButtonInteraction}
           className="px-8 md:px-12 py-3 md:py-4 bg-gray-400 text-white text-xl md:text-2xl font-bold rounded-full shadow-xl cursor-pointer select-none"
