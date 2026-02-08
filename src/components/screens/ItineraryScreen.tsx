@@ -135,12 +135,12 @@ export function ItineraryScreen() {
 
                 {/* Venue Image/Logo (smaller, inside card) */}
                 {currentItem.image && !imageError[currentItem.id] && (
-                  <div className="relative w-full h-32 md:h-40 rounded-2xl overflow-hidden mb-4">
+                  <div className="relative w-full h-32 md:h-40 rounded-2xl overflow-hidden mb-4 bg-gradient-to-br from-rose-50 to-pink-100 flex items-center justify-center p-4">
                     <Image
                       src={getAssetPath(currentItem.image)}
                       alt={`${currentItem.activity} venue`}
                       fill
-                      className="object-cover"
+                      className="object-contain p-2"
                       onError={() =>
                         setImageError((prev) => ({
                           ...prev,
@@ -148,7 +148,6 @@ export function ItineraryScreen() {
                         }))
                       }
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                   </div>
                 )}
 
