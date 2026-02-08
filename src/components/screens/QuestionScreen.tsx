@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { getAssetPath } from "@/lib/utils";
 
 interface QuestionScreenProps {
   onYes: () => void;
@@ -126,7 +127,7 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
       {/* Hidden audio element for background playback */}
       <audio
         ref={audioRef}
-        src="/audio/please-message.mp3"
+        src={getAssetPath("/audio/please-message.mp3")}
         className="hidden"
       />
 
@@ -138,7 +139,7 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
         className="mb-8"
       >
         <Image
-          src="/images/proposal.png"
+          src={getAssetPath("/images/proposal.png")}
           alt="Be My Valentine?"
           width={500}
           height={500}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { itinerary, dayLabels } from "@/lib/itinerary";
+import { getAssetPath } from "@/lib/utils";
 
 export function ItineraryScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -101,7 +102,7 @@ export function ItineraryScreen() {
               >
                 <div className="relative w-full max-w-md aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-white/30">
                   <Image
-                    src={currentItem.characterImage!}
+                    src={getAssetPath(currentItem.characterImage!)}
                     alt={currentItem.activity}
                     fill
                     className="object-cover"
@@ -136,7 +137,7 @@ export function ItineraryScreen() {
                 {currentItem.image && !imageError[currentItem.id] && (
                   <div className="relative w-full h-32 md:h-40 rounded-2xl overflow-hidden mb-4">
                     <Image
-                      src={currentItem.image}
+                      src={getAssetPath(currentItem.image)}
                       alt={`${currentItem.activity} venue`}
                       fill
                       className="object-cover"

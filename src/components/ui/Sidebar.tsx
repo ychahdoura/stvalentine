@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { getAssetPath } from "@/lib/utils";
 
 type Section = "itinerary" | "memories" | "card";
 
@@ -42,7 +43,7 @@ export function Sidebar({ currentSection, onSectionChange }: SidebarProps) {
             {/* Jo-Yo Avatar */}
             <div className="absolute top-2 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-lg z-10">
               <Image
-                src="/images/avatars/jo-yo.png"
+                src={getAssetPath("/images/avatars/jo-yo.png")}
                 alt="Jo-Yo"
                 width={48}
                 height={48}

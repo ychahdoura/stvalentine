@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Confetti } from "../animations/Confetti";
 import Image from "next/image";
+import { getAssetPath } from "@/lib/utils";
 
 interface CelebrationScreenProps {
   onContinue: () => void;
@@ -128,7 +129,7 @@ export function CelebrationScreen({ onContinue }: CelebrationScreenProps) {
               }}
             >
               <Image
-                src="/images/castle.png"
+                src={getAssetPath("/images/castle.png")}
                 alt="Our Valentine Castle"
                 fill
                 className="object-cover"
