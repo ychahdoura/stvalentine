@@ -31,30 +31,17 @@ export function Sidebar({ currentSection, onSectionChange }: SidebarProps) {
         animate={{ x: 0 }}
         className="hidden md:flex w-64 min-h-screen bg-gradient-to-b from-rose-900/90 to-pink-900/90 backdrop-blur-sm p-6 flex-col border-r border-pink-500/30 fixed left-0 top-0 z-40"
       >
-        {/* Avatar Heart */}
+        {/* Avatar */}
         <div className="flex flex-col items-center mb-8">
-          {/* Heart shape with avatars */}
-          <div className="relative w-32 h-32 mb-4">
-            {/* Heart background */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-8xl pulse-heart">💕</span>
-            </div>
-
-            {/* Jo-Yo Avatar */}
-            <div className="absolute top-2 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-lg z-10">
-              <Image
-                src={getAssetPath("/images/avatars/jo-yo.png")}
-                alt="Jo-Yo"
-                width={48}
-                height={48}
-                className="object-cover w-full h-full"
-              />
-            </div>
-
-            {/* Nancy Avatar Placeholder */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-lg z-10 bg-pink-300 flex items-center justify-center">
-              <span className="text-2xl">👸</span>
-            </div>
+          {/* Jo-Yo Avatar */}
+          <div className="relative w-24 h-24 mb-4 rounded-full overflow-hidden border-4 border-white shadow-xl">
+            <Image
+              src={getAssetPath("/images/avatars/jo-yo.png")}
+              alt="Jo-Yo"
+              width={96}
+              height={96}
+              className="object-cover w-full h-full"
+            />
           </div>
 
           <h2 className="text-white font-bold text-lg text-center">
