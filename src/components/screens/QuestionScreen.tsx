@@ -36,15 +36,15 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
       const distanceY = mouseY - buttonCenterY;
       const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
-      // If mouse is within 150px of button, run away!
-      const triggerDistance = 150;
+      // If mouse is within 100px of button, dodge!
+      const triggerDistance = 100;
       if (distance < triggerDistance) {
         // Calculate escape direction (opposite to mouse)
         const escapeX = -distanceX;
         const escapeY = -distanceY;
 
-        // Normalize and scale escape vector
-        const escapeDistance = 200;
+        // Normalize and scale escape vector - smaller movement to stay visible
+        const escapeDistance = 80;
         const magnitude = Math.sqrt(escapeX * escapeX + escapeY * escapeY);
         const normalizedX = (escapeX / magnitude) * escapeDistance;
         const normalizedY = (escapeY / magnitude) * escapeDistance;
@@ -53,9 +53,9 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
         let newX = noButtonPosition.x + normalizedX;
         let newY = noButtonPosition.y + normalizedY;
 
-        // Keep button within screen bounds
-        const maxX = window.innerWidth / 2 - 100;
-        const maxY = window.innerHeight / 2 - 50;
+        // Keep button within tight bounds so it stays visible
+        const maxX = 150;
+        const maxY = 100;
         newX = Math.max(-maxX, Math.min(maxX, newX));
         newY = Math.max(-maxY, Math.min(maxY, newY));
 
@@ -87,9 +87,9 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
 
     if (!hasStartedChasing) {
       setHasStartedChasing(true);
-      // Initial escape
-      const escapeX = Math.random() > 0.5 ? 200 : -200;
-      const escapeY = Math.random() > 0.5 ? 150 : -150;
+      // Initial small dodge
+      const escapeX = Math.random() > 0.5 ? 80 : -80;
+      const escapeY = Math.random() > 0.5 ? 60 : -60;
       setNoButtonPosition({ x: escapeX, y: escapeY });
       setNoAttempts(1);
     }
@@ -104,12 +104,12 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
       });
     }
 
-    const escapeX = (Math.random() - 0.5) * 400;
-    const escapeY = (Math.random() - 0.5) * 300;
+    const escapeX = (Math.random() - 0.5) * 200;
+    const escapeY = (Math.random() - 0.5) * 150;
 
-    // Keep within bounds
-    const maxX = window.innerWidth / 2 - 100;
-    const maxY = window.innerHeight / 2 - 50;
+    // Keep within tight bounds
+    const maxX = 150;
+    const maxY = 100;
     const newX = Math.max(-maxX, Math.min(maxX, escapeX));
     const newY = Math.max(-maxY, Math.min(maxY, escapeY));
 
