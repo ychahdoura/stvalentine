@@ -11,6 +11,114 @@ function parseDate(dateStr: string): Date {
   return new Date(dateStr);
 }
 
+// Different frame styles for variety
+type FrameStyle = "gold" | "wood" | "white" | "baroque" | "modern";
+
+function getFrameStyle(index: number): FrameStyle {
+  const styles: FrameStyle[] = ["gold", "wood", "white", "baroque", "modern"];
+  return styles[index % styles.length];
+}
+
+interface FrameProps {
+  style: FrameStyle;
+  children: React.ReactNode;
+  date: string;
+}
+
+function PictureFrame({ style, children, date }: FrameProps) {
+  const frameStyles = {
+    gold: {
+      outer:
+        "bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 p-3 md:p-4 rounded-sm",
+      inner: "border-2 border-yellow-300/60",
+      corner: "border-yellow-200/80",
+      plaque:
+        "bg-gradient-to-r from-amber-800 via-amber-700 to-amber-800 text-amber-100",
+      shadow: "shadow-[0_8px_30px_rgba(180,130,50,0.4)]",
+    },
+    wood: {
+      outer:
+        "bg-gradient-to-br from-amber-900 via-amber-800 to-stone-900 p-3 md:p-4 rounded-sm",
+      inner: "border-2 border-amber-700/40",
+      corner: "border-amber-600/50",
+      plaque:
+        "bg-gradient-to-r from-stone-800 via-stone-700 to-stone-800 text-stone-200",
+      shadow: "shadow-[0_8px_30px_rgba(80,50,30,0.5)]",
+    },
+    white: {
+      outer: "bg-gradient-to-br from-gray-100 via-white to-gray-200 p-4 md:p-5",
+      inner: "border border-gray-300/50",
+      corner: "border-gray-400/40",
+      plaque:
+        "bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 text-gray-700",
+      shadow: "shadow-[0_8px_30px_rgba(0,0,0,0.15)]",
+    },
+    baroque: {
+      outer:
+        "bg-gradient-to-br from-yellow-700 via-amber-500 to-yellow-800 p-4 md:p-5 rounded-lg",
+      inner: "border-4 border-double border-yellow-300/50",
+      corner: "border-yellow-200/70",
+      plaque:
+        "bg-gradient-to-r from-yellow-900 via-amber-800 to-yellow-900 text-yellow-100",
+      shadow: "shadow-[0_10px_40px_rgba(180,140,50,0.5)]",
+    },
+    modern: {
+      outer:
+        "bg-gradient-to-br from-zinc-800 via-zinc-700 to-zinc-900 p-2 md:p-3",
+      inner: "border border-zinc-600/30",
+      corner: "border-zinc-500/40",
+      plaque:
+        "bg-gradient-to-r from-zinc-800 via-zinc-700 to-zinc-800 text-zinc-300",
+      shadow: "shadow-[0_8px_25px_rgba(0,0,0,0.4)]",
+    },
+  };
+
+  const s = frameStyles[style];
+
+  return (
+    <div className={`relative ${s.outer} ${s.shadow}`}>
+      {/* Inner border */}
+      <div
+        className={`absolute inset-2 md:inset-3 ${s.inner} pointer-events-none`}
+      />
+
+      {/* Ornate corners */}
+      <div
+        className={`absolute top-1 left-1 w-4 h-4 border-t-2 border-l-2 ${s.corner}`}
+      />
+      <div
+        className={`absolute top-1 right-1 w-4 h-4 border-t-2 border-r-2 ${s.corner}`}
+      />
+      <div
+        className={`absolute bottom-1 left-1 w-4 h-4 border-b-2 border-l-2 ${s.corner}`}
+      />
+      <div
+        className={`absolute bottom-1 right-1 w-4 h-4 border-b-2 border-r-2 ${s.corner}`}
+      />
+
+      {/* Baroque style gets extra decorative elements */}
+      {style === "baroque" && (
+        <>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-2 bg-gradient-to-b from-yellow-300/40 to-transparent rounded-b-full" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-2 bg-gradient-to-t from-yellow-300/40 to-transparent rounded-t-full" />
+        </>
+      )}
+
+      {/* Image container */}
+      <div className="relative aspect-square overflow-hidden bg-stone-900">
+        {children}
+      </div>
+
+      {/* Date plaque */}
+      <div className={`mt-2 ${s.plaque} py-1 px-2 rounded-sm`}>
+        <p className="text-xs md:text-sm text-center font-serif italic">
+          {date}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export function MemoriesScreen() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
@@ -57,40 +165,20 @@ export function MemoriesScreen() {
             key={memory.id}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.05 }}
-            whileHover={{ scale: 1.05, rotate: Math.random() > 0.5 ? 2 : -2 }}
+            transition={{ delay: index * 0.02 }}
+            whileHover={{ scale: 1.03, rotate: index % 2 === 0 ? 1 : -1 }}
             onClick={() => setSelectedImage(memory.id)}
             className="cursor-pointer"
           >
-            {/* Painting Frame */}
-            <div className="relative bg-gradient-to-br from-amber-800 via-amber-700 to-amber-900 p-3 md:p-4 rounded-sm shadow-2xl">
-              {/* Inner gold border */}
-              <div className="absolute inset-2 md:inset-3 border-2 border-amber-500/50 pointer-events-none" />
-
-              {/* Ornate corners */}
-              <div className="absolute top-1 left-1 w-4 h-4 border-t-2 border-l-2 border-amber-400/70" />
-              <div className="absolute top-1 right-1 w-4 h-4 border-t-2 border-r-2 border-amber-400/70" />
-              <div className="absolute bottom-1 left-1 w-4 h-4 border-b-2 border-l-2 border-amber-400/70" />
-              <div className="absolute bottom-1 right-1 w-4 h-4 border-b-2 border-r-2 border-amber-400/70" />
-
-              {/* Image container */}
-              <div className="relative aspect-square overflow-hidden bg-stone-900">
-                <Image
-                  src={getAssetPath(memory.image)}
-                  alt={`Memory from ${memory.date}`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                />
-              </div>
-
-              {/* Date plaque */}
-              <div className="mt-2 bg-gradient-to-r from-amber-900 via-amber-800 to-amber-900 py-1 px-2 rounded-sm">
-                <p className="text-amber-200/90 text-xs md:text-sm text-center font-serif italic">
-                  {memory.date}
-                </p>
-              </div>
-            </div>
+            <PictureFrame style={getFrameStyle(index)} date={memory.date}>
+              <Image
+                src={getAssetPath(memory.image)}
+                alt={`Memory from ${memory.date}`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              />
+            </PictureFrame>
           </motion.div>
         ))}
       </div>
