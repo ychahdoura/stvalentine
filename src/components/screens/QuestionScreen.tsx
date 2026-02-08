@@ -97,8 +97,8 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
 
   // Handle touch/click for mobile and desktop - plays audio on user gesture
   const handleNoButtonInteraction = useCallback(() => {
-    // Try to play audio on user gesture (click/touch is valid)
-    if (audioRef.current && noAttempts >= 4) {
+    // Play audio on first click (user gesture required by browsers)
+    if (audioRef.current) {
       audioRef.current.play().catch(() => {
         // Ignore autoplay errors
       });
@@ -136,6 +136,7 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
         ref={audioRef}
         src={getAssetPath("/audio/please-message.mp3")}
         className="hidden"
+        loop
       />
 
       {/* Main Proposal Image */}
