@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { memories } from "@/lib/memories";
@@ -8,6 +8,14 @@ import { getAssetPath } from "@/lib/utils";
 
 export function MemoriesScreen() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const lightboxRef = useRef<HTMLDivElement>(null);
+
+  // Scroll lightbox to top when image changes
+  useEffect(() => {
+    if (selectedImage && lightboxRef.current) {
+      lightboxRef.current.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [selectedImage]);
 
   return (
     <div className="min-h-screen p-4 md:p-8">
@@ -34,10 +42,7 @@ export function MemoriesScreen() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: index * 0.05 }}
             whileHover={{ scale: 1.05, rotate: Math.random() > 0.5 ? 2 : -2 }}
-            onClick={() => {
-              setSelectedImage(memory.id);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
+            onClick={() => setSelectedImage(memory.id)}
             className="cursor-pointer"
           >
             {/* Painting Frame */}
@@ -77,17 +82,18 @@ export function MemoriesScreen() {
       <AnimatePresence>
         {selectedImage && (
           <motion.div
+            ref={lightboxRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/90 z-50 flex items-start md:items-center justify-center p-4 overflow-y-auto"
             onClick={() => setSelectedImage(null)}
           >
             <motion.div
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.8 }}
-              className="relative max-w-4xl w-full"
+              className="relative max-w-4xl w-full my-4 md:my-0"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Large painting frame */}
@@ -140,7 +146,6 @@ export function MemoriesScreen() {
                     );
                     if (currentIndex > 0) {
                       setSelectedImage(memories[currentIndex - 1].id);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
                     }
                   }}
                   className="pointer-events-auto w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white text-2xl transition-colors"
@@ -155,7 +160,6 @@ export function MemoriesScreen() {
                     );
                     if (currentIndex < memories.length - 1) {
                       setSelectedImage(memories[currentIndex + 1].id);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
                     }
                   }}
                   className="pointer-events-auto w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white text-2xl transition-colors"
