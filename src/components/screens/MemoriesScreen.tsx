@@ -34,7 +34,10 @@ export function MemoriesScreen() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: index * 0.05 }}
             whileHover={{ scale: 1.05, rotate: Math.random() > 0.5 ? 2 : -2 }}
-            onClick={() => setSelectedImage(memory.id)}
+            onClick={() => {
+              setSelectedImage(memory.id);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
             className="cursor-pointer"
           >
             {/* Painting Frame */}
@@ -137,6 +140,7 @@ export function MemoriesScreen() {
                     );
                     if (currentIndex > 0) {
                       setSelectedImage(memories[currentIndex - 1].id);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
                     }
                   }}
                   className="pointer-events-auto w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white text-2xl transition-colors"
@@ -151,6 +155,7 @@ export function MemoriesScreen() {
                     );
                     if (currentIndex < memories.length - 1) {
                       setSelectedImage(memories[currentIndex + 1].id);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
                     }
                   }}
                   className="pointer-events-auto w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white text-2xl transition-colors"
