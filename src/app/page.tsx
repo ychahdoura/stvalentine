@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { FloatingHearts } from "@/components/animations/FloatingHearts";
 import { QuestionScreen } from "@/components/screens/QuestionScreen";
@@ -9,6 +9,7 @@ import { Sidebar } from "@/components/ui/Sidebar";
 import { ItineraryScreen } from "@/components/screens/ItineraryScreen";
 import { MemoriesScreen } from "@/components/screens/MemoriesScreen";
 import { LoveLetterScreen } from "@/components/screens/LoveLetterScreen";
+import { getAssetPath } from "@/lib/utils";
 
 type AppState = "question" | "celebration" | "dashboard";
 type Section = "itinerary" | "memories" | "card";
@@ -16,6 +17,17 @@ type Section = "itinerary" | "memories" | "card";
 export default function Home() {
   const [appState, setAppState] = useState<AppState>("question");
   const [currentSection, setCurrentSection] = useState<Section>("itinerary");
+  const bgMusicRef = useRef<HTMLAudioElement>(null);
+
+  // Play background music when entering dashboard
+  useEffect(() => {
+    if (appState === "dashboard" && bgMusicRef.current) {
+      bgMusicRef.current.volume = 0.3;
+      bgMusicRef.current.play().catch(() => {
+        // Ignore autoplay errors
+      });
+    }
+  }, [appState]);
 
   const handleYes = () => {
     setAppState("celebration");
@@ -40,6 +52,14 @@ export default function Home() {
 
   return (
     <main className="min-h-screen relative overflow-hidden">
+      {/* Background Music for Dashboard */}
+      <audio
+        ref={bgMusicRef}
+        src={getAssetPath("/audio/background-music.mp3")}
+        loop
+        className="hidden"
+      />
+
       {/* Floating Hearts Background - Always visible */}
       <FloatingHearts count={50} />
 
