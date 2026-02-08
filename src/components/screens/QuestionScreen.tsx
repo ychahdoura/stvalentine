@@ -137,6 +137,7 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
         src={getAssetPath("/audio/please-message.mp3")}
         className="hidden"
         loop
+        preload="auto"
       />
 
       {/* Main Proposal Image */}

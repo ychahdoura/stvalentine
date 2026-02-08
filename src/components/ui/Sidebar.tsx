@@ -47,7 +47,7 @@ export function Sidebar({ currentSection, onSectionChange }: SidebarProps) {
           <h2 className="text-white font-bold text-lg text-center">
             Jo-Yo & Nan Nan
           </h2>
-          <p className="text-pink-200 text-sm">Valentine&apos;s 2025 💕</p>
+          <p className="text-pink-200 text-sm">Valentine&apos;s 2026 💕</p>
         </div>
 
         {/* Divider */}
@@ -90,7 +90,7 @@ export function Sidebar({ currentSection, onSectionChange }: SidebarProps) {
           <span className="text-3xl pulse-heart">💕</span>
           <div className="text-center">
             <h2 className="text-white font-bold">Jo-Yo & Nan Nan</h2>
-            <p className="text-pink-200 text-xs">Valentine&apos;s 2025</p>
+            <p className="text-pink-200 text-xs">Valentine&apos;s 2026</p>
           </div>
           <span className="text-3xl pulse-heart">💕</span>
         </div>
