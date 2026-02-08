@@ -7,7 +7,7 @@ import { itinerary, dayLabels } from "@/lib/itinerary";
 
 export function ItineraryScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [imageError, setImageError] = useState<{ [key: number]: boolean }>({});
+  const [imageError, setImageError] = useState<Record<string, boolean>>({});
   const currentItem = itinerary[currentIndex];
 
   const getDayProgress = () => {
