@@ -76,8 +76,15 @@ export function QuestionScreen({ onYes }: QuestionScreenProps) {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [hasStartedChasing, noButtonPosition, showMessage]);
 
-  // Start chasing on first hover
+  // Start chasing on first hover and play audio
   const startChasing = useCallback(() => {
+    // Try to play audio on hover (user gesture)
+    if (audioRef.current) {
+      audioRef.current.play().catch(() => {
+        // Ignore autoplay errors
+      });
+    }
+
     if (!hasStartedChasing) {
       setHasStartedChasing(true);
       // Initial escape
