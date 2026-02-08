@@ -162,6 +162,7 @@ export const itinerary: ItineraryItem[] = [
     caption: "Exploring a cute town together!",
     day: "sunday",
     image: "/images/activities/almonte.jpg",
+    characterImage: "/images/activities/almonte-character.png",
     websiteUrl: "https://almonte.com/",
   },
   {
